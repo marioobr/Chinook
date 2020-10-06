@@ -7,8 +7,8 @@ namespace Chinook.Models
 {
     public class Album
     {
-        int AlbumId { get; set; }
-        string Titulo { get; set; }
-        int ArtistaId { get; set; }
+        public int AlbumId { get; set; }
+        public string Titulo { get; set; }
+        public int ArtistaId { get; set; }
     }
 }

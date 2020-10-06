@@ -13,5 +13,6 @@ namespace Chinook.Models
         [DataType(DataType.Date)]
         public DateTime FechaFactura { get; set; }
         public float Total { get; set; }
+
     }
 }

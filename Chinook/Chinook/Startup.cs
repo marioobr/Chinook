@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chinook.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +26,11 @@ namespace Chinook
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<ChinookCRUDContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("ChinookCRUDContext")));
+
+            services.AddDbContext<ChinookContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ChinookContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,7 +7,7 @@ namespace Chinook.Models
 {
     public class Genero
     {
-        int GeneroId { get; set; }
-        string Nombre { get; set; }
+        public int GeneroId { get; set; }
+        public string Nombre { get; set; }
     }
 }
