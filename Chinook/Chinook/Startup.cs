@@ -26,8 +26,6 @@ namespace Chinook
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<ChinookCRUDContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("ChinookCRUDContext")));
 
             services.AddDbContext<ChinookContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ChinookContext")));
