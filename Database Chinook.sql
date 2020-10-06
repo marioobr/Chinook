@@ -1,4 +1,5 @@
 Create database Chinook;
+go
 Use Chinook;
 
 create table Artista(
