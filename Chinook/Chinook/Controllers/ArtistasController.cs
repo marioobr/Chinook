@@ -20,10 +20,53 @@ namespace Chinook.Controllers
         }
 
         // GET: Artistas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string CadenaBusq,
+            string sortOrder,
+            string currentFilter,
+            int? pageNumber)
+
         {
-            return View(await _context.Artista.ToListAsync());
+            //Paginación
+            ViewData["CurrentSort"] = sortOrder;
+            //Ordenar
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : " ";
+
+            if (CadenaBusq != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                CadenaBusq = currentFilter;
+            }
+            ViewData["CurrentFilter"] = CadenaBusq;
+
+            //Busqueda
+            var artistas = from c in _context.Artista
+                            select c;
+
+            if (!String.IsNullOrEmpty(CadenaBusq))
+            {
+                artistas = artistas.Where(p => p.Nombre.Contains(CadenaBusq));
+            }
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    artistas = artistas.OrderByDescending(o => o.Nombre);
+                    break;
+
+                default:
+                    artistas = artistas.OrderBy(p => p.Nombre);
+                    break;
+            }
+
+            int pageSize = 5;
+            //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Artista>.CreateAsync(artistas.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
+
 
         // GET: Artistas/Details/5
         public async Task<IActionResult> Details(int? id)

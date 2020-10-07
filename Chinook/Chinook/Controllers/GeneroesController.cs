@@ -20,10 +20,55 @@ namespace Chinook.Controllers
         }
 
         // GET: Generoes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string CadenaBusq,
+            string sortOrder,
+            string currentFilter,
+            int? pageNumber)
+
         {
-            return View(await _context.Genero.ToListAsync());
+            //Paginación
+            ViewData["CurrentSort"] = sortOrder;
+            //Ordenar
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : " ";
+
+            if (CadenaBusq != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                CadenaBusq = currentFilter;
+            }
+            ViewData["CurrentFilter"] = CadenaBusq;
+
+            //Busqueda
+            var generos = from c in _context.Genero
+                            select c;
+
+            if (!String.IsNullOrEmpty(CadenaBusq))
+            {
+                generos = generos.Where(p => p.Nombre.Contains(CadenaBusq));
+            }
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    generos = generos.OrderByDescending(o => o.Nombre);
+                    break;
+
+                default:
+                    generos = generos.OrderBy(p => p.Nombre);
+                    break;
+            }
+
+            int pageSize = 5;
+            //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Genero>.CreateAsync(generos.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
+
+
+
 
         // GET: Generoes/Details/5
         public async Task<IActionResult> Details(int? id)
