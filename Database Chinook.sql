@@ -3,13 +3,13 @@ go
 Use Chinook;
 
 create table Artista(
-ArtistaId int not null,
+ArtistaId int identity(1,1) not null,
 Nombre nvarchar(150),
 constraint PK_Artista Primary key (ArtistaId)
 );
 
 create table Album(
-AlbumId int NOT NULl,
+AlbumId int identity(1,1) NOT NULl,
 Titulo nvarchar(250),
 ArtistId int,
 CONSTRAINT PK_album Primary key (AlbumId),
@@ -17,13 +17,13 @@ CONSTRAINT FK_album Foreign key (ArtistId) references Artista(ArtistaId),
 );
 
 create table Genero(
-GeneroId int not null,
+GeneroId int identity(1,1) not null,
 Nombre nvarchar(150) not null,
 constraint PK_Genero primary key (GeneroId)
 );
 
 create table Cancion(
-CancionId int not null,
+CancionId int identity(1,1) not null,
 Nombre nvarchar(150) not null,
 AlbumId int not null,
 GeneroId int not null,
@@ -33,7 +33,7 @@ constraint FK_Cancion_Genero foreign key (GeneroId) references Genero(GeneroId)
 );
 
 create table Empleado(
-EmpleadoId int not null,
+EmpleadoId int identity(1,1) not null,
 Nombres nvarchar(250)not null,
 Apellidos nvarchar(250) not null,
 Cargo nvarchar(150) not null,
@@ -45,7 +45,7 @@ constraint FK_Empleado Foreign key (JefeDirecto) references Empleado(EmpleadoId)
 );
 
 create table Cliente(
-ClienteId int not null,
+ClienteId int identity(1,1) not null,
 Nombres nvarchar(250)not null,
 Apellidos nvarchar(250) not null,
 Telefono numeric(8) not null,
@@ -56,7 +56,7 @@ constraint FK_Cliente Foreign key (SoporteId) references Empleado(EmpleadoId)
 );
 
 create table Factura(
-FacturaId int not null,
+FacturaId int identity(1,1) not null,
 ClienteId int not null,
 FechaFactura datetime not null,
 Total float not null,
@@ -65,7 +65,7 @@ constraint FK_Factura Foreign key (ClienteId) REFERENCES Cliente(ClienteId)
 );
 
 create table DetalleFactura(
-DetFacturaId int not null,
+DetFacturaId int identity(1,1) not null,
 FacturaID int not null,
 CancionID int not null,
 PrecioUnidad float not null,
