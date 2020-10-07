@@ -20,9 +20,26 @@ namespace Chinook.Controllers
         }
 
         // GET: Albums
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string CadenaBusq,
+                                               
+                                               int? pageNumber)
         {
-            return View(await _context.Album.ToListAsync());
+
+            if (CadenaBusq != null)
+            {
+                pageNumber = 1;
+            }
+
+            var albums = from p in _context.Album
+                            select p;
+
+            if (!String.IsNullOrEmpty(CadenaBusq))
+            {
+                albums = albums.Where(p => p.Titulo.Contains(CadenaBusq));
+            }
+
+            int pageSize = 3;
+            return View(await PaginatedList<Album>.CreateAsync(albums.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Albums/Details/5
