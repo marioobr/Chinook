@@ -38,7 +38,7 @@ namespace Chinook.Controllers
                 albums = albums.Where(p => p.Titulo.Contains(CadenaBusq));
             }
 
-            int pageSize = 3;
+            int pageSize = 5;
             return View(await PaginatedList<Album>.CreateAsync(albums.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 

@@ -21,25 +21,13 @@ namespace Chinook.Controllers
 
         // GET: Generoes
         public async Task<IActionResult> Index(string CadenaBusq,
-            string sortOrder,
-            string currentFilter,
             int? pageNumber)
 
         {
-            //Paginación
-            ViewData["CurrentSort"] = sortOrder;
-            //Ordenar
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : " ";
-
             if (CadenaBusq != null)
             {
                 pageNumber = 1;
             }
-            else
-            {
-                CadenaBusq = currentFilter;
-            }
-            ViewData["CurrentFilter"] = CadenaBusq;
 
             //Busqueda
             var generos = from c in _context.Genero
@@ -48,18 +36,6 @@ namespace Chinook.Controllers
             if (!String.IsNullOrEmpty(CadenaBusq))
             {
                 generos = generos.Where(p => p.Nombre.Contains(CadenaBusq));
-            }
-
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    generos = generos.OrderByDescending(o => o.Nombre);
-                    break;
-
-                default:
-                    generos = generos.OrderBy(p => p.Nombre);
-                    break;
             }
 
             int pageSize = 5;

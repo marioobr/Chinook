@@ -20,9 +20,23 @@ namespace Chinook.Controllers
         }
 
         // GET: Facturas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id, int? pageNumber)
         {
-            return View(await _context.Factura.ToListAsync());
+            if (id != null)
+            {
+                pageNumber = 1;
+            }
+
+            var facturas = from p in _context.Factura
+                           select p;
+
+            if (id!=null)
+            {
+                facturas = facturas.Where(p => p.FacturaId.Equals(id));
+            }
+
+            int pageSize = 5;
+            return View(await PaginatedList<Factura>.CreateAsync(facturas.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Facturas/Details/5

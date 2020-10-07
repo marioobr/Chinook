@@ -21,25 +21,14 @@ namespace Chinook.Controllers
 
         // GET: Artistas
         public async Task<IActionResult> Index(string CadenaBusq,
-            string sortOrder,
-            string currentFilter,
             int? pageNumber)
 
         {
-            //Paginación
-            ViewData["CurrentSort"] = sortOrder;
-            //Ordenar
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : " ";
 
             if (CadenaBusq != null)
             {
                 pageNumber = 1;
             }
-            else
-            {
-                CadenaBusq = currentFilter;
-            }
-            ViewData["CurrentFilter"] = CadenaBusq;
 
             //Busqueda
             var artistas = from c in _context.Artista
@@ -50,17 +39,6 @@ namespace Chinook.Controllers
                 artistas = artistas.Where(p => p.Nombre.Contains(CadenaBusq));
             }
 
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    artistas = artistas.OrderByDescending(o => o.Nombre);
-                    break;
-
-                default:
-                    artistas = artistas.OrderBy(p => p.Nombre);
-                    break;
-            }
 
             int pageSize = 5;
             //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));

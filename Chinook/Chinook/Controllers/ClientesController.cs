@@ -35,7 +35,7 @@ namespace Chinook.Controllers
                 clientes = clientes.Where(p =>p.Nombres.Contains(CadenaBusq));
             }
 
-            int pageSize = 3;
+            int pageSize = 5;
             return View(await PaginatedList<Cliente>.CreateAsync(clientes.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 

@@ -21,25 +21,14 @@ namespace Chinook.Controllers
 
         // GET: Empleadoes
         public async Task<IActionResult> Index(string CadenaBusq,
-            string sortOrder,
-            string currentFilter,
             int? pageNumber)
 
         {
-            //Paginación
-            ViewData["CurrentSort"] = sortOrder;
-            //Ordenar
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : " ";
 
             if (CadenaBusq != null)
             {
                 pageNumber = 1;
             }
-            else
-            {
-                CadenaBusq = currentFilter;
-            }
-            ViewData["CurrentFilter"] = CadenaBusq;
 
             //Busqueda
             var empleados = from c in _context.Empleado
@@ -51,17 +40,7 @@ namespace Chinook.Controllers
             }
 
 
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    empleados = empleados.OrderByDescending(o => o.Nombres);
-                    break;
-
-                default:
-                    empleados = empleados.OrderBy(p => p.Nombres);
-                    break;
-            }
-
+            
             int pageSize = 5;
             //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));
             return View(await PaginatedList<Empleado>.CreateAsync(empleados.AsNoTracking(), pageNumber ?? 1, pageSize));

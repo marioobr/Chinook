@@ -21,24 +21,13 @@ namespace Chinook.Controllers
 
         // GET: Cancions
         public async Task<IActionResult> Index(string CadenaBusq,
-            string sortOrder,
-            string currentFilter,
             int? pageNumber)
         {
-            //Paginación
-            ViewData["CurrentSort"] = sortOrder;
-            //Ordenar
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : " ";
 
             if (CadenaBusq != null)
             {
                 pageNumber = 1;
             }
-            else
-            {
-                CadenaBusq = currentFilter;
-            }
-            ViewData["CurrentFilter"] = CadenaBusq;
 
             //Busqueda
             var canciones = from c in _context.Cancion
@@ -49,17 +38,6 @@ namespace Chinook.Controllers
                 canciones = canciones.Where(p => p.Nombre.Contains(CadenaBusq));
             }
 
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    canciones = canciones.OrderByDescending(o => o.Nombre);
-                    break;
-
-                default:
-                    canciones = canciones.OrderBy(p => p.Nombre);
-                    break;
-            }
 
             int pageSize = 5;
             //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));
