@@ -11,9 +11,9 @@ constraint PK_Artista Primary key (ArtistaId)
 create table Album(
 AlbumId int identity(1,1) NOT NULl,
 Titulo nvarchar(250),
-ArtistId int,
+ArtistaId int,
 CONSTRAINT PK_album Primary key (AlbumId),
-CONSTRAINT FK_album Foreign key (ArtistId) references Artista(ArtistaId),
+CONSTRAINT FK_album Foreign key (ArtistaId) references Artista(ArtistaId),
 );
 
 create table Genero(
@@ -37,7 +37,7 @@ EmpleadoId int identity(1,1) not null,
 Nombres nvarchar(250)not null,
 Apellidos nvarchar(250) not null,
 Cargo nvarchar(150) not null,
-JefeDirecto int not null,
+JefeDirecto int,
 Telefono numeric(8) not null,
 Email nvarchar(150),
 constraint PK_Empleado Primary key (EmpleadoId),
@@ -50,7 +50,7 @@ Nombres nvarchar(250)not null,
 Apellidos nvarchar(250) not null,
 Telefono numeric(8) not null,
 Email nvarchar(150),
-SoporteId int not null,
+SoporteId int,
 constraint PK_Cliente Primary key (ClienteId),
 constraint FK_Cliente Foreign key (SoporteId) references Empleado(EmpleadoId)
 );
@@ -79,3 +79,4 @@ CREATE LOGIN AdminChinook with password = '123';
 CREATE USER Admin for login AdminChinook;
 Grant insert, select, update, delete, create table, create procedure, 
 create view on database::Chinook to Admin;
+
