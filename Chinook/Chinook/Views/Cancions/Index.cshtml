@@ -1,10 +1,10 @@
 ﻿@model PaginatedList<Chinook.Models.Cancion>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Canciones";
 }
 
-<h1>Canciones</h1>
+<h1>@Html.ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                Nombre
+                Canción
             </th>
             <th>
-                GeneroId
+                Género
             </th>
             <th>
-                AlbumId
+                Albúm
             </th>
             <th></th>
         </tr>
@@ -32,10 +32,10 @@
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.GeneroId)
+                    @Html.DisplayFor(modelItem => item.NombreG.GeneroId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AlbumId)
+                    @Html.DisplayFor(modelItem => item.NombreAlbum.AlbumId)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.CancionId">Edit</a> |
@@ -47,21 +47,22 @@
     </tbody>
 </table>
 
-
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : " ";
     var nextDisabled = !Model.HasNextPage ? "disabled" : " ";
 }
 
+
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex -1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-primary @prevDisabled">
     Previo
 </a>
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex +1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-primary @nextDisabled">
     Siguiente
 </a>
-

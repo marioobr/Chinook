@@ -20,23 +20,12 @@ namespace Chinook.Controllers
         }
 
         // GET: DetalleFacturas
-        public async Task<IActionResult> Index(int id, int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            if (id != null)
-            {
-                pageNumber = 1;
-            }
-
-            var detalle = from p in _context.DetalleFactura
-                           select p;
-
-            if (id!=null)
-            {
-                detalle = detalle.Where(p => p.DetFacturaId.Equals(id));
-            }
+            var chinookContext = _context.DetalleFactura.Include(d => d.Facturas).Include(d => d.NombreCanc);
 
             int pageSize = 5;
-            return View(await PaginatedList<DetalleFactura>.CreateAsync(detalle.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<DetalleFactura>.CreateAsync(chinookContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: DetalleFacturas/Details/5
@@ -48,6 +37,8 @@ namespace Chinook.Controllers
             }
 
             var detalleFactura = await _context.DetalleFactura
+                .Include(d => d.Facturas)
+                .Include(d => d.NombreCanc)
                 .FirstOrDefaultAsync(m => m.DetFacturaId == id);
             if (detalleFactura == null)
             {
@@ -60,6 +51,8 @@ namespace Chinook.Controllers
         // GET: DetalleFacturas/Create
         public IActionResult Create()
         {
+            ViewData["FacturaId"] = new SelectList(_context.Factura, "FacturaId", "FacturaId");
+            ViewData["CancionId"] = new SelectList(_context.Cancion, "CancionId", "Nombre");
             return View();
         }
 
@@ -76,6 +69,8 @@ namespace Chinook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FacturaId"] = new SelectList(_context.Factura, "FacturaId", "FacturaId", detalleFactura.FacturaId);
+            ViewData["CancionId"] = new SelectList(_context.Cancion, "CancionId", "Nombre", detalleFactura.CancionId);
             return View(detalleFactura);
         }
 
@@ -92,6 +87,8 @@ namespace Chinook.Controllers
             {
                 return NotFound();
             }
+            ViewData["FacturaId"] = new SelectList(_context.Factura, "FacturaId", "FacturaId", detalleFactura.FacturaId);
+            ViewData["CancionId"] = new SelectList(_context.Cancion, "CancionId", "Nombre", detalleFactura.CancionId);
             return View(detalleFactura);
         }
 
@@ -127,6 +124,8 @@ namespace Chinook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FacturaId"] = new SelectList(_context.Factura, "FacturaId", "FacturaId", detalleFactura.FacturaId);
+            ViewData["CancionId"] = new SelectList(_context.Cancion, "CancionId", "Nombre", detalleFactura.CancionId);
             return View(detalleFactura);
         }
 
@@ -139,6 +138,8 @@ namespace Chinook.Controllers
             }
 
             var detalleFactura = await _context.DetalleFactura
+                .Include(d => d.Facturas)
+                .Include(d => d.NombreCanc)
                 .FirstOrDefaultAsync(m => m.DetFacturaId == id);
             if (detalleFactura == null)
             {

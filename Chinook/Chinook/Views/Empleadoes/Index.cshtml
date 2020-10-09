@@ -1,10 +1,10 @@
 ﻿@model PaginatedList<Chinook.Models.Empleado>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Empleados";
 }
 
-<h1>Empleados</h1>
+<h1>@Html.ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -22,13 +22,13 @@
                 Cargo
             </th>
             <th>
-                JefeDirecto
+                Jefe
             </th>
             <th>
                 Telefono
             </th>
             <th>
-                Email
+                Correo
             </th>
             <th></th>
         </tr>

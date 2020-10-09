@@ -20,28 +20,12 @@ namespace Chinook.Controllers
         }
 
         // GET: Cancions
-        public async Task<IActionResult> Index(string CadenaBusq,
-            int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-
-            if (CadenaBusq != null)
-            {
-                pageNumber = 1;
-            }
-
-            //Busqueda
-            var canciones = from c in _context.Cancion
-                            select c;
-
-            if (!String.IsNullOrEmpty(CadenaBusq))
-            {
-                canciones = canciones.Where(p => p.Nombre.Contains(CadenaBusq));
-            }
-
+            var chinookContext = _context.Cancion.Include(c => c.NombreAlbum).Include(c => c.NombreG);
 
             int pageSize = 5;
-            //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));
-            return View(await PaginatedList<Cancion>.CreateAsync(canciones.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Cancion>.CreateAsync(chinookContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Cancions/Details/5
@@ -53,6 +37,8 @@ namespace Chinook.Controllers
             }
 
             var cancion = await _context.Cancion
+                .Include(c => c.NombreAlbum)
+                .Include(c => c.NombreG)
                 .FirstOrDefaultAsync(m => m.CancionId == id);
             if (cancion == null)
             {
@@ -65,6 +51,8 @@ namespace Chinook.Controllers
         // GET: Cancions/Create
         public IActionResult Create()
         {
+            ViewData["AlbumId"] = new SelectList(_context.Album, "AlbumId", "Titulo");
+            ViewData["GeneroId"] = new SelectList(_context.Genero, "GeneroId", "Nombre");
             return View();
         }
 
@@ -81,6 +69,8 @@ namespace Chinook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AlbumId"] = new SelectList(_context.Album, "AlbumId", "Titulo", cancion.AlbumId);
+            ViewData["GeneroId"] = new SelectList(_context.Genero, "GeneroId", "Nombre", cancion.GeneroId);
             return View(cancion);
         }
 
@@ -97,6 +87,8 @@ namespace Chinook.Controllers
             {
                 return NotFound();
             }
+            ViewData["AlbumId"] = new SelectList(_context.Album, "AlbumId", "Titulo", cancion.AlbumId);
+            ViewData["GeneroId"] = new SelectList(_context.Genero, "GeneroId", "Nombre", cancion.GeneroId);
             return View(cancion);
         }
 
@@ -132,6 +124,8 @@ namespace Chinook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AlbumId"] = new SelectList(_context.Album, "AlbumId", "Titulo", cancion.AlbumId);
+            ViewData["GeneroId"] = new SelectList(_context.Genero, "GeneroId", "Nombre", cancion.GeneroId);
             return View(cancion);
         }
 
@@ -144,6 +138,8 @@ namespace Chinook.Controllers
             }
 
             var cancion = await _context.Cancion
+                .Include(c => c.NombreAlbum)
+                .Include(c => c.NombreG)
                 .FirstOrDefaultAsync(m => m.CancionId == id);
             if (cancion == null)
             {

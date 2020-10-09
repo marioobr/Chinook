@@ -1,10 +1,10 @@
 ﻿@model PaginatedList<Chinook.Models.DetalleFactura>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Detalles";
 }
 
-<h1>Detalles</h1>
+<h1>@Html.ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                FacturaId
+                Factura N°
             </th>
             <th>
-                CancionId
+                Canción
             </th>
             <th>
-                PrecioUnidad
+                Precio Unitario
             </th>
             <th>
                 Cantidad
@@ -32,10 +32,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FacturaId)
+                    @Html.DisplayFor(modelItem => item.Facturas.FacturaId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CancionId)
+                    @Html.DisplayFor(modelItem => item.NombreCanc.CancionId)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PrecioUnidad)

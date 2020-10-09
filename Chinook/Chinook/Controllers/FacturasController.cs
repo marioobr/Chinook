@@ -20,23 +20,12 @@ namespace Chinook.Controllers
         }
 
         // GET: Facturas
-        public async Task<IActionResult> Index(int id, int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            if (id != null)
-            {
-                pageNumber = 1;
-            }
-
-            var facturas = from p in _context.Factura
-                           select p;
-
-            if (id!=null)
-            {
-                facturas = facturas.Where(p => p.FacturaId.Equals(id));
-            }
+            var chinookContext = _context.Factura.Include(f => f.NombresCli);
 
             int pageSize = 5;
-            return View(await PaginatedList<Factura>.CreateAsync(facturas.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Factura>.CreateAsync(chinookContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Facturas/Details/5
@@ -48,6 +37,7 @@ namespace Chinook.Controllers
             }
 
             var factura = await _context.Factura
+                .Include(f => f.NombresCli)
                 .FirstOrDefaultAsync(m => m.FacturaId == id);
             if (factura == null)
             {
@@ -60,6 +50,7 @@ namespace Chinook.Controllers
         // GET: Facturas/Create
         public IActionResult Create()
         {
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "Nombres") ;
             return View();
         }
 
@@ -76,6 +67,7 @@ namespace Chinook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "Nombres", factura.ClienteId);
             return View(factura);
         }
 
@@ -92,6 +84,7 @@ namespace Chinook.Controllers
             {
                 return NotFound();
             }
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "Nombres", factura.ClienteId);
             return View(factura);
         }
 
@@ -127,6 +120,7 @@ namespace Chinook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "Nombres", factura.ClienteId);
             return View(factura);
         }
 
@@ -139,6 +133,7 @@ namespace Chinook.Controllers
             }
 
             var factura = await _context.Factura
+                .Include(f => f.NombresCli)
                 .FirstOrDefaultAsync(m => m.FacturaId == id);
             if (factura == null)
             {

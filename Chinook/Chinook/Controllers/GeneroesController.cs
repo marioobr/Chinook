@@ -20,31 +20,12 @@ namespace Chinook.Controllers
         }
 
         // GET: Generoes
-        public async Task<IActionResult> Index(string CadenaBusq,
-            int? pageNumber)
-
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            if (CadenaBusq != null)
-            {
-                pageNumber = 1;
-            }
-
-            //Busqueda
-            var generos = from c in _context.Genero
-                            select c;
-
-            if (!String.IsNullOrEmpty(CadenaBusq))
-            {
-                generos = generos.Where(p => p.Nombre.Contains(CadenaBusq));
-            }
 
             int pageSize = 5;
-            //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));
-            return View(await PaginatedList<Genero>.CreateAsync(generos.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Genero>.CreateAsync(_context.Genero.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
-
-
-
 
         // GET: Generoes/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -20,30 +20,11 @@ namespace Chinook.Controllers
         }
 
         // GET: Empleadoes
-        public async Task<IActionResult> Index(string CadenaBusq,
-            int? pageNumber)
-
+        public async Task<IActionResult> Index(int? pageNumber)
         {
 
-            if (CadenaBusq != null)
-            {
-                pageNumber = 1;
-            }
-
-            //Busqueda
-            var empleados = from c in _context.Empleado
-                            select c;
-
-            if (!String.IsNullOrEmpty(CadenaBusq))
-            {
-                empleados = empleados.Where(p => p.Nombres.Contains(CadenaBusq));
-            }
-
-
-            
             int pageSize = 5;
-            //return View(await PaginatedList<Pelicula>.CreateAsync(peliculas.AsNoTracking(), pageNumber ?? 1, pageSize));
-            return View(await PaginatedList<Empleado>.CreateAsync(empleados.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Empleado>.CreateAsync(_context.Empleado.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Empleadoes/Details/5

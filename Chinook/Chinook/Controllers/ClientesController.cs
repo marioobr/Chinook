@@ -20,23 +20,12 @@ namespace Chinook.Controllers
         }
 
         // GET: Clientes
-        public async Task<IActionResult> Index(string CadenaBusq,int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            if (CadenaBusq != null)
-            {
-                pageNumber = 1;
-            }
-
-            var clientes = from p in _context.Cliente
-                         select p;
-
-            if (!String.IsNullOrEmpty(CadenaBusq))
-            {
-                clientes = clientes.Where(p =>p.Nombres.Contains(CadenaBusq));
-            }
+            var chinookContext = _context.Cliente.Include(c => c.NombresE);
 
             int pageSize = 5;
-            return View(await PaginatedList<Cliente>.CreateAsync(clientes.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Cliente>.CreateAsync(chinookContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Clientes/Details/5
@@ -48,6 +37,7 @@ namespace Chinook.Controllers
             }
 
             var cliente = await _context.Cliente
+                .Include(c => c.NombresE)
                 .FirstOrDefaultAsync(m => m.ClienteId == id);
             if (cliente == null)
             {
@@ -60,6 +50,7 @@ namespace Chinook.Controllers
         // GET: Clientes/Create
         public IActionResult Create()
         {
+            ViewData["SoporteId"] = new SelectList(_context.Empleado, "EmpleadoId", "Nombres");
             return View();
         }
 
@@ -76,6 +67,7 @@ namespace Chinook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SoporteId"] = new SelectList(_context.Empleado, "EmpleadoId", "Nombres", cliente.SoporteId);
             return View(cliente);
         }
 
@@ -92,6 +84,7 @@ namespace Chinook.Controllers
             {
                 return NotFound();
             }
+            ViewData["SoporteId"] = new SelectList(_context.Empleado, "EmpleadoId", "Nombres", cliente.SoporteId);
             return View(cliente);
         }
 
@@ -127,6 +120,7 @@ namespace Chinook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SoporteId"] = new SelectList(_context.Empleado, "EmpleadoId", "Nombres", cliente.SoporteId);
             return View(cliente);
         }
 
@@ -139,6 +133,7 @@ namespace Chinook.Controllers
             }
 
             var cliente = await _context.Cliente
+                .Include(c => c.NombresE)
                 .FirstOrDefaultAsync(m => m.ClienteId == id);
             if (cliente == null)
             {

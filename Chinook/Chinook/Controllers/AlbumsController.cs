@@ -20,26 +20,12 @@ namespace Chinook.Controllers
         }
 
         // GET: Albums
-        public async Task<IActionResult> Index(string CadenaBusq,
-                                               
-                                               int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-
-            if (CadenaBusq != null)
-            {
-                pageNumber = 1;
-            }
-
-            var albums = from p in _context.Album
-                            select p;
-
-            if (!String.IsNullOrEmpty(CadenaBusq))
-            {
-                albums = albums.Where(p => p.Titulo.Contains(CadenaBusq));
-            }
-
+            var chinookContext = _context.Album.Include(a => a.Nombre);
             int pageSize = 5;
-            return View(await PaginatedList<Album>.CreateAsync(albums.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Album>.CreateAsync(chinookContext.AsNoTracking(), pageNumber ?? 1, pageSize));
+            //return View(await chinookContext.ToListAsync());
         }
 
         // GET: Albums/Details/5
@@ -51,6 +37,7 @@ namespace Chinook.Controllers
             }
 
             var album = await _context.Album
+                .Include(a => a.Nombre)
                 .FirstOrDefaultAsync(m => m.AlbumId == id);
             if (album == null)
             {
@@ -63,6 +50,7 @@ namespace Chinook.Controllers
         // GET: Albums/Create
         public IActionResult Create()
         {
+            ViewData["ArtistaId"] = new SelectList(_context.Artista, "ArtistaId", "Nombre");
             return View();
         }
 
@@ -79,6 +67,7 @@ namespace Chinook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArtistaId"] = new SelectList(_context.Artista, "ArtistaId", "Nombre", album.ArtistaId);
             return View(album);
         }
 
@@ -95,6 +84,7 @@ namespace Chinook.Controllers
             {
                 return NotFound();
             }
+            ViewData["ArtistaId"] = new SelectList(_context.Artista, "ArtistaId", "Nombre", album.ArtistaId);
             return View(album);
         }
 
@@ -130,6 +120,7 @@ namespace Chinook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArtistaId"] = new SelectList(_context.Artista, "ArtistaId", "Nombre", album.ArtistaId);
             return View(album);
         }
 
@@ -142,6 +133,7 @@ namespace Chinook.Controllers
             }
 
             var album = await _context.Album
+                .Include(a => a.Nombre)
                 .FirstOrDefaultAsync(m => m.AlbumId == id);
             if (album == null)
             {
